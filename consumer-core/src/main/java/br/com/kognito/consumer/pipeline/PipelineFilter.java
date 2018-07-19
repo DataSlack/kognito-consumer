@@ -1,4 +1,4 @@
-package br.com.kognito.consumer.config;
+package br.com.kognito.consumer.pipeline;
 
 public class PipelineFilter {
 }
