@@ -1,3 +1,10 @@
+config : [
+   workers : 2,
+   id : 'default',
+   batch_size: 125,
+   batch_timeout: 50
+]
+
 input : [
   twitter : {
     access_key : "",
