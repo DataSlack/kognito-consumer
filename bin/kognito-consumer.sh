@@ -54,8 +54,8 @@ if [ "$1" = "-V" ] || [ "$1" = "--version" ]; then
   echo "Kognito Consumer: $CONSUMER_VERSION"
 else
   unset CLASSPATH
-  for J in $(cd "${LOGSTASH_JARS}"; ls *.jar); do
-    CLASSPATH=${CLASSPATH}${CLASSPATH:+:}${LOGSTASH_JARS}/${J}
+  for J in $(cd "${CONSUMER_JARS}"; ls *.jar); do
+    CLASSPATH=${CLASSPATH}${CLASSPATH:+:}${CONSUMER_JARS}/${J}
   done
   exec "${JAVACMD}" ${JAVA_OPTS} -cp "${CLASSPATH}" br.com.kognito.consumer.Consumer "$@"
 fi
