@@ -43,4 +43,11 @@ public class PipelineConfiguration {
     public PipelineOutput output() {
         return this.output;
     }
+
+    /**
+     * Reload current configuration from config files
+     */
+    public void reload() {
+
+    }
 }

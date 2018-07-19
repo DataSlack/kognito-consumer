@@ -10,9 +10,15 @@ import br.com.kognito.consumer.pipeline.PipelineOutput;
  */
 public class Pipeline {
 
+    /**
+     * Current Pipeline Configuration
+     */
     private PipelineConfiguration config;
 
-
+    /**
+     * Get current pipeline configuration
+     * @return
+     */
     public PipelineConfiguration config() {
         return this.config;
     }

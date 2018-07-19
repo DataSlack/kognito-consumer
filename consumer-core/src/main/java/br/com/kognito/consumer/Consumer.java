@@ -10,6 +10,8 @@ import java.nio.file.Paths;
  */
 public final class Consumer implements Runnable, AutoCloseable {
 
+    private Orchestrator orchestrator;
+
     /**
      * Main Entrypoint.
      * @param args
@@ -65,15 +67,16 @@ public final class Consumer implements Runnable, AutoCloseable {
     Consumer(final Path home, final String[] args, final PrintStream output,
              final PrintStream error, final InputStream input) {
         output.println("[KOGNITO-CONSUMER] Starting Kognito Consumer at " + home + "...");
+        this.orchestrator = Orchestrator.build();
     }
 
     @Override
     public void close() throws Exception {
-
+        this.orchestrator.shutdown();
     }
 
     @Override
     public void run() {
-
+        this.orchestrator.start();
     }
 }
