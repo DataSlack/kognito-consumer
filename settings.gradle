@@ -1,0 +1,5 @@
+include ':consumer-core'
+project(':consumer-core').projectDir = new File('./consumer-core')
+
+
+

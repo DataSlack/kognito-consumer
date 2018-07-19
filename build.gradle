@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+}
+
+group 'br.com.kognito.consumer'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+allprojects {
+    group = 'br.com.kognito.consumer'
+
+    apply plugin: 'java'
+
+    tasks.withType(JavaCompile).all {
+        def env = System.getenv()
+        boolean ci = env['CI']
+
+        //don't lint when running CI builds
+        if(!ci){
+            options.compilerArgs.add("-Xlint:all")
+        }
+    }
+
+
+    clean {
+        delete "${projectDir}/out/"
+    }
+}
+
+clean {
+    delete "${projectDir}/Gemfile"
+    delete "${projectDir}/Gemfile.lock"
+    delete "${projectDir}/vendor"
+    delete "${projectDir}/NOTICE.TXT"
+    delete "${projectDir}/.bundle"
+    delete "${projectDir}/qa/integration/Gemfile.lock"
+    delete "${projectDir}/qa/integration/.bundle"
+    delete "${projectDir}/build/licenseReportFolders.txt"
+    delete "${projectDir}/build/rubyDependencies.csv"
+}
+
+task bootstrap {}
+
+project(":consumer-core") {
+    ["test"].each { tsk ->
+        tasks.getByPath(":consumer-core:" + tsk).configure {
+            dependsOn bootstrap
+        }
+    }
+}

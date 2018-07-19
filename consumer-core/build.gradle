@@ -1,0 +1,58 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+plugins {
+    id 'java'
+}
+
+group 'br.com.kognito.consumer'
+version '1.0'
+
+
+repositories {
+    mavenCentral()
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier 'sources'
+    extension 'jar'
+}
+
+task copyRuntimeLibs(type: Copy) {
+    into project.file('lib/jars/')
+    from configurations.compile, configurations.runtime
+}
+
+// copy jar file into the gem lib dir but without the version number in filename
+task copyJar(type: Copy, dependsOn: [sourcesJar, copyRuntimeLibs]) {
+    from project.jar
+    into project.file('lib/jars/')
+    rename(/(.+)-${project.version}.jar/, '$1.jar')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    extension 'jar'
+}
+
+configurations.create('sources')
+configurations.create('javadoc')
+configurations.archives {
+    extendsFrom configurations.sources
+    extendsFrom configurations.javadoc
+}
+
+
+artifacts {
+    sources(sourcesJar) {
+        // Weird Gradle quirk where type will be used for the extension, but only for sources
+        type 'jar'
+    }
+    javadoc(javadocJar) {
+        type 'javadoc'
+    }
+}
+
+jar.finalizedBy(copyJar)
