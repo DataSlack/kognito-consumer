@@ -1,6 +1,6 @@
 # This script is used to initialize a number of env variables and setup the
-# runtime environment of logstash. It sets to following env variables:
-#   LOGSTASH_HOME & LS_HOME
+# runtime environment of consumer. It sets to following env variables:
+#   CONSUMER_HOME & LS_HOME
 #   SINCEDB_DIR
 #   JAVACMD
 #   JAVA_OPTS
@@ -13,7 +13,7 @@
 #
 # The following env var will be used by this script if set:
 #   LS_GEM_HOME and LS_GEM_PATH to overwrite the path assigned to GEM_HOME and GEM_PATH
-#   LS_JAVA_OPTS to append extra options to the JVM options provided by logstash
+#   LS_JAVA_OPTS to append extra options to the JVM options provided by consumer
 #   JAVA_HOME to point to the java home
 
 unset CDPATH
@@ -31,7 +31,7 @@ if [ -L "$0" ]; then
     SOURCEPATH="$(stat -c %N $0 | awk '{print $3}' | sed -e 's/\‘//' -e 's/\’//')"
     if [ $? -ne 0 ]; then
       # Failed to execute or parse stat
-      echo "Failed to set LOGSTASH_HOME from $(cd `dirname $0`/..; pwd)/bin/logstash.lib.sh"
+      echo "Failed to set CONSUMER_HOME from $(cd `dirname $0`/..; pwd)/bin/consumer.lib.sh"
       echo "You may need to launch Logstash with a full path instead of a symlink."
       exit 1
     fi
@@ -41,12 +41,12 @@ else
   SOURCEPATH="$0"
 fi
 
-LOGSTASH_HOME="$(cd `dirname $SOURCEPATH`/..; pwd)"
-export LOGSTASH_HOME
-export KC_HOME="${LOGSTASH_HOME}"
-SINCEDB_DIR="${LOGSTASH_HOME}"
+CONSUMER_HOME="$(cd `dirname $SOURCEPATH`/..; pwd)"
+export CONSUMER_HOME
+export KC_HOME="${CONSUMER_HOME}"
+SINCEDB_DIR="${CONSUMER_HOME}"
 export SINCEDB_DIR
-LOGSTASH_JARS=${LOGSTASH_HOME}/consumer-core/lib/jars
+CONSUMER_JARS=${CONSUMER_HOME}/consumer-core/lib/jars
 
 # iterate over the command line args and look for the argument
 # after --path.settings to see if the jvm.options file is in
@@ -104,14 +104,14 @@ setup_java() {
 
   # Set a default GC log file for use by jvm.options _before_ it's called.
   if [ -z "$LS_GC_LOG_FILE" ] ; then
-    LS_GC_LOG_FILE="./logstash-gc.log"
+    LS_GC_LOG_FILE="./consumer-gc.log"
   fi
 
   # Set the initial JVM options from the jvm.options file.  Look in
-  # /etc/logstash first, and break if that file is found readable there.
+  # /etc/consumer first, and break if that file is found readable there.
   if [ -z "$LS_JVM_OPTS" ]; then
-      for jvm_options in /etc/logstash/jvm.options \
-                        "$LOGSTASH_HOME"/config/jvm.options;
+      for jvm_options in /etc/consumer/jvm.options \
+                        "$CONSUMER_HOME"/config/jvm.options;
                          do
           if [ -r "$jvm_options" ]; then
               LS_JVM_OPTS=$jvm_options

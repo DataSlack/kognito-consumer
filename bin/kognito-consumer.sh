@@ -1,22 +1,22 @@
 #!/bin/bash
-# Run logstash from source
+# Run KOGNITO CONSUMER from source
 #
 # This is most useful when done from a git checkout.
 #
 # Usage:
-#   bin/logstash <command> [arguments]
+#   bin/kognito-consumer.sh <command> [arguments]
 #
-# See 'bin/logstash --help' for a list of commands.
+# See 'bin/kognito-consumer.sh --help' for a list of commands.
 #
 # Supported environment variables:
-#   LS_JAVA_OPTS="xxx" to append extra options to the JVM options provided by logstash
+#   LS_JAVA_OPTS="xxx" to append extra options to the JVM options provided by Kognito Consumer
 #
 # Development environment variables:
 #   DEBUG=1 to output debugging information
 
 unset CDPATH
-# This unwieldy bit of scripting is to try to catch instances where Logstash
-# was launched from a symlink, rather than a full path to the Logstash binary
+# This unwieldy bit of scripting is to try to catch instances where Consumer
+# was launched from a symlink, rather than a full path to the Consumer binary
 if [ -L "$0" ]; then
   # Launched from a symlink
   # --Test for the readlink binary
@@ -30,7 +30,7 @@ if [ -L "$0" ]; then
     if [ $? -ne 0 ]; then
       # Failed to execute or parse stat
       echo "Failed to find source library at path $(cd `dirname $0`/..; pwd)/bin/consumer.lib.sh"
-      echo "You may need to launch Logstash with a full path instead of a symlink."
+      echo "You may need to launch Kognito Consumer with a full path instead of a symlink."
       exit 1
     fi
   fi
@@ -43,15 +43,15 @@ fi
 setup
 
 if [ "$1" = "-V" ] || [ "$1" = "--version" ]; then
-  LOGSTASH_VERSION_FILE2="${LOGSTASH_HOME}/versions.yml"
-  if [ -f ${LOGSTASH_VERSION_FILE2} ]; then
+  CONSUMER_VERSION_FILE2="${CONSUMER_HOME}/versions.yml"
+  if [ -f ${CONSUMER_VERSION_FILE2} ]; then
     # this file is present for a git checkout type install
     # but its not in zip, deb and rpm artifacts (and in integration tests)
-    LOGSTASH_VERSION="$(sed -ne 's/^consumer: \([^*]*\)$/\1/p' ${LOGSTASH_VERSION_FILE2})"
+    CONSUMER_VERSION="$(sed -ne 's/^consumer: \([^*]*\)$/\1/p' ${CONSUMER_VERSION_FILE2})"
   else
-    LOGSTASH_VERSION="Version not detected"
+    CONSUMER_VERSION="Version not detected"
   fi
-  echo "Kognito Consumer: $LOGSTASH_VERSION"
+  echo "Kognito Consumer: $CONSUMER_VERSION"
 else
   unset CLASSPATH
   for J in $(cd "${LOGSTASH_JARS}"; ls *.jar); do

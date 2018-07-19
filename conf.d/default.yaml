@@ -1,0 +1,19 @@
+input : [
+  twitter : {
+    access_key : "",
+    access_token : ""
+  }
+]
+
+filter : [
+
+]
+
+output : [
+  cassandra : {
+    host : ["127.0.0.1"],
+    port : 80,
+    keyspace : "",
+    schema : ""
+  }
+]
